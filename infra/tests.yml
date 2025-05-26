@@ -10,7 +10,7 @@
   tasks:
     - name: Wait for containers to start
       ansible.builtin.wait_for:
-        timeout: 10
+        timeout: 25
 
     - name: Get list of running Docker containers
       ansible.builtin.command: docker ps -q
