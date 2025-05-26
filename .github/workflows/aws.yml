@@ -1,4 +1,4 @@
-name: Manual AWS Deployment and Testing
+name: AWS Deployment and Testing
 
 on:
   push:
@@ -34,6 +34,9 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
         run: |
           cd infra
+          cat "${{ env.AWS_ACCESS_KEY_ID }}"
+          cat "${{ env.AWS_SECRET_ACCESS_KEY }}"
+          cat "${{ env.AWS_SESSION_TOKEN }}"
           make deploy
 
       - name: Provision EC2
