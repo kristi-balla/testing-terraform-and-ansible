@@ -37,7 +37,7 @@ jobs:
           make deploy
 
       - name: Upload Terraform state file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tfstate
           path: infra/terraform.tfstate
