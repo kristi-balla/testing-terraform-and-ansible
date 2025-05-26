@@ -55,7 +55,8 @@ jobs:
           IP=$(terraform output -raw ip)
           ls -al priv.pem
           cat priv.pem | head -n 5
-          ssh -o StrictHostKeyChecking=no -i infra/priv.pem admin@$IP 'echo connected'
+          whoami
+          ssh -o StrictHostKeyChecking=no -i priv.pem admin@$IP 'echo connected'
 
       - name: Provision EC2
         run: |
