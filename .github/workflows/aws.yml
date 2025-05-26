@@ -34,10 +34,17 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
         run: |
           cd infra
-          echo "${{ env.AWS_ACCESS_KEY_ID }}"
-          echo "${{ env.AWS_SECRET_ACCESS_KEY }}"
-          echo "${{ env.AWS_SESSION_TOKEN }}"
           make deploy
+
+      - name: Wait for SSH on EC2
+        run: |
+          cd infra
+          IP=$(terraform output -raw ip)
+          echo "$IP"
+          until ssh -o StrictHostKeyChecking=no -i infra/priv.pem admin@$IP 'echo ready'; do
+            echo "Waiting for SSH..."
+            sleep 5
+          done
 
       - name: Provision EC2
         run: |
