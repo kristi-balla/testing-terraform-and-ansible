@@ -42,6 +42,29 @@ jobs:
           name: tfstate
           path: infra/terraform.tfstate
 
+      # there also exists ansible.builtin.wait_for_connection, but
+      # it doesn't play nice with gather_facts: true, which i need
+      # for the docker installation
+      - name: Wait for EC2 to be ready
+        run: |
+          cd infra
+          IP=$(terraform output -raw ip)
+          echo "Waiting for SSH on $IP..."
+          for i in {1..5}; do
+            nc -z -v -w5 $IP 22 && echo "SSH is ready!" && exit 0
+            echo "Retry $i: SSH not up yet"
+            sleep 10
+          done
+          echo "SSH never became available"
+          exit 1
+
+      - name: Debug SSH to EC2
+        run: |
+          cd infra
+          IP=$(terraform output -raw ip)
+          ssh -o StrictHostKeyChecking=no -i priv.pem admin@$IP 'echo connected'
+
+
       - name: Provision EC2
         run: |
           cd infra
