@@ -12,6 +12,13 @@
     - keys.yml
     - token.yml
   tasks:
+    - name: Wait until the EC2 is reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 2
+        sleep: 3
+        timeout: 30
+
     - name: Add repositories
       ansible.builtin.deb822_repository:
         name: "{{ item.name }}"

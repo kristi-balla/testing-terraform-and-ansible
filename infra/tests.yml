@@ -8,6 +8,10 @@
   environment:
     ANSIBLE_FORCE_COLOR: "true"
   tasks:
+    - name: Wait for containers to start
+      ansible.builtin.wait_for:
+        timeout: 10
+
     - name: Get list of running Docker containers
       ansible.builtin.command: docker ps -q
       changed_when: true
