@@ -14,7 +14,7 @@ jobs:
 
       - name: Write private key to infra/priv.pem
         run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > infra/priv.pem
+          printf "%s" "${{ secrets.PRIVATE_KEY }}" > infra/priv.pem
           chmod 400 infra/priv.pem
 
       - name: Install Terraform
@@ -53,6 +53,8 @@ jobs:
         run: |
           cd infra
           IP=$(terraform output -raw ip)
+          ls -al priv.pem
+          cat priv.pem | head -n 5
           ssh -o StrictHostKeyChecking=no -i infra/priv.pem admin@$IP 'echo connected'
 
       - name: Provision EC2
