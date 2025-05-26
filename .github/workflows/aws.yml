@@ -36,15 +36,17 @@ jobs:
           cd infra
           make deploy
 
-      - name: Wait for SSH on EC2
+      - name: Wait for EC2 to be ready
         run: |
-          cd infra
-          IP=$(terraform output -raw ip)
-          echo "$IP"
-          until ssh -o StrictHostKeyChecking=no -i infra/priv.pem admin@$IP 'echo ready'; do
-            echo "Waiting for SSH..."
-            sleep 5
+          IP=$(terraform -chdir=infra output -raw public_ip)
+          echo "Waiting for SSH on $IP..."
+          for i in {1..5}; do
+            nc -z -v -w5 $IP 22 && echo "SSH is ready!" && exit 0
+            echo "Retry $i: SSH not up yet"
+            sleep 10
           done
+          echo "SSH never became available"
+          exit 1
 
       - name: Provision EC2
         run: |
