@@ -1,0 +1,33 @@
+name: Manual Teardown
+
+on:
+  workflow_dispatch:
+
+jobs:
+  teardown:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Mask all secrets
+        # if you're bored, think of a way to loop through this
+        run: |
+          echo "::add-mask::${{ github.event.inputs.AWS_ACCESS_KEY_ID }}"
+          echo "::add-mask::${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}"
+          echo "::add-mask::${{ github.event.inputs.AWS_SESSION_TOKEN }}"
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.12.1
+
+      - name: Kill EC2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ github.event.inputs.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ github.event.inputs.AWS_SESSION_TOKEN }}
+        run: |
+          cd infra
+          make teardown
