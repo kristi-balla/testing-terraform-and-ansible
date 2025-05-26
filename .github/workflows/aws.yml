@@ -53,14 +53,11 @@ jobs:
         run: |
           cd infra
           IP=$(terraform output -raw ip)
-          ls -al priv.pem
-          cat priv.pem | head -n 5
-          whoami
           ssh -o StrictHostKeyChecking=no -i priv.pem admin@$IP 'echo connected'
 
       - name: Provision EC2
         run: |
           cd infra
           echo "cr_username: ${{ github.actor }}" >> token.yml
-          echo "token: ${{ secrets.GITHUB_TOKEN }}" >> token.yml
+          echo "token: ${{ secrets.GHCR_TOKEN }}" >> token.yml
           make ansible
