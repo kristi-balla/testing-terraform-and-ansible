@@ -61,3 +61,8 @@ jobs:
           echo "cr_username: ${{ github.actor }}" >> token.yml
           echo "token: ${{ secrets.GHCR_TOKEN }}" >> token.yml
           make ansible
+
+      - name: Integration Tests
+        run: |
+          cd infra
+          make ansible PLAYBOOK=tests.yml

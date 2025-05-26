@@ -3,3 +3,4 @@ token.yml
 *.pem
 *.env
 *providers
+hosts.ini

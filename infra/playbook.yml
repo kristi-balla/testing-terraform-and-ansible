@@ -5,6 +5,8 @@
   gather_facts: true
   vars:
     vm_user: admin
+  environment:
+    ANSIBLE_FORCE_COLOR: "true"
   vars_files:
     - packages.yml
     - keys.yml
