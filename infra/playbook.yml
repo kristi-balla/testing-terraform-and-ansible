@@ -52,6 +52,8 @@
         version: deploy-aet-cluster
 
     - name: Debug docker-compose config
+      environment:
+        BRANCH: deploy-aet-cluster
       ansible.builtin.command:
         cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml config
       register: compose_config
@@ -60,6 +62,13 @@
     - name: Print docker-compose config
       ansible.builtin.debug:
         var: compose_config.stdout_lines
+
+    - name: Pull the kurva images
+      environment:
+        BRANCH: deploy-aet-cluster
+      ansible.builtin.command:
+        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml pull
+      changed_when: false
 
     - name: Run app
       environment:
