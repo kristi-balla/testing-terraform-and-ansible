@@ -38,6 +38,11 @@
         update_cache: true
         force_apt_get: true
 
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        detached: true
+
     - name: Login to CR
       community.docker.docker_login:
         registry: "ghcr.io"
@@ -73,7 +78,7 @@
     - name: Run app
       environment:
         BRANCH: deploy-aet-cluster
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml up 2>&1 | tee /tmp/compose.log
       changed_when: false
 
