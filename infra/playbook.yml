@@ -62,6 +62,8 @@
         var: compose_config.stdout_lines
 
     - name: Run app
+      environment:
+        BRANCH: deploy-aet-cluster
       ansible.builtin.command:
-        cmd: docker compose up -d
+        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml up -d
       changed_when: false
