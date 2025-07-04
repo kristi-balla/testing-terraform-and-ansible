@@ -74,5 +74,16 @@
       environment:
         BRANCH: deploy-aet-cluster
       ansible.builtin.command:
-        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml up
+        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml up 2>&1 | tee /tmp/compose.log
       changed_when: false
+
+    - name: Show docker logs even on fail
+      ansible.builtin.command:
+        cmd: cat /tmp/compose.log
+      register: compose_log_output
+      changed_when: false
+      failed_when: false
+
+    - name: Dump compose log
+      ansible.builtin.debug:
+        var: compose_log_output.stdout_lines
