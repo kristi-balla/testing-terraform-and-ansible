@@ -45,23 +45,13 @@
         password: "{{ token }}"
         state: present
 
-    - name: Copy compose file to remote
-      ansible.builtin.copy:
-        src: ./docker-compose.yml
-        dest: /home/admin/docker-compose.yml
-        owner: admin
-        group: admin
-        mode: '0644'
-
-    - name: Clean images
-      community.docker.docker_compose_v2:
-        project_src: .
-        state: absent
-        remove_images: local
-        remove_volumes: true
-        remove_orphans: true
+    - name: Gimme repo
+      ansible.builtin.git:
+        repo: https://github.com/AET-DevOps25/team-404-name-not-found.git
+        dest: /home/{{ vm_user }}
+        version: main
 
     - name: Run application
       community.docker.docker_compose_v2:
-        project_src: .
+        project_src: /home/{{ vm_user }}
         state: present
