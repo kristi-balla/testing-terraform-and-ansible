@@ -51,7 +51,19 @@
         dest: /home/{{ vm_user }}/repo
         version: deploy-aet-cluster
 
+    - name: Debug docker-compose config
+      ansible.builtin.command:
+        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml config
+      register: compose_config
+      changed_when: false
+
+    - name: Print docker-compose config
+      ansible.builtin.debug:
+        var: compose_config.stdout_lines
+
     - name: Run application
+      environment:
+        BRANCH: deploy-aet-cluster
       community.docker.docker_compose_v2:
-        project_src: /home/{{ vm_user }}/repo
+        project_src: /home/{{ vm_user }}
         state: present
