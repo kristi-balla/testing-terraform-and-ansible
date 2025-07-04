@@ -49,7 +49,7 @@
       ansible.builtin.git:
         repo: https://github.com/AET-DevOps25/team-404-name-not-found.git
         dest: /home/{{ vm_user }}/repo
-        version: main
+        version: deploy-aet-cluster
 
     - name: Run application
       community.docker.docker_compose_v2:
