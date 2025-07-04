@@ -65,5 +65,5 @@
       environment:
         BRANCH: deploy-aet-cluster
       ansible.builtin.command:
-        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml up -d
+        cmd: docker compose -f /home/{{ vm_user }}/repo/compose.yml up
       changed_when: false
